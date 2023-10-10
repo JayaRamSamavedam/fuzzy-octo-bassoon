@@ -27,27 +27,35 @@ public class UserService {
     
 
 	public UserDto login(CredentialsDto credentialsDto) {
+//		finding the user in repository
+		
         User user = userRepository.findByLogin(credentialsDto.getLogin())
                 .orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
 
+//        if password matches re  map the user to dto and send
         if (passwordEncoder.matches(CharBuffer.wrap(credentialsDto.getPassword()), user.getPassword())) {
             return userMapper.toUserDto(user);
         }
+//        else throw exception
+        
         throw new AppException("Invalid password", HttpStatus.BAD_REQUEST);
     }
 
     public UserDto register(SignUpDto userDto) {
+//    	finding if there are any usernames are there in the database
         Optional<User> optionalUser = userRepository.findByLogin(userDto.getLogin());
-
+//        if its peresent it will throw exception
         if (optionalUser.isPresent()) {
             throw new AppException("Login already exists", HttpStatus.BAD_REQUEST);
         }
-
+//        Mapping the data transfer object to the user object
+        
         User user = userMapper.signUpToUser(userDto);
+//        hashing the password here
         user.setPassword(passwordEncoder.encode(CharBuffer.wrap(userDto.getPassword())));
-
+//        saving the user in the database
         User savedUser = userRepository.save(user);
-
+//        again mapping tp the Data transfer object
         return userMapper.toUserDto(savedUser);
     }
 
