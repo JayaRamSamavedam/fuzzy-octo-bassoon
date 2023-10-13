@@ -13,12 +13,16 @@ import com.bloggy.backend.repositories.PostsRepository;
 
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @Service
 public class PostsService {
 	private PostsRepository pr;
 	
-//	create
+public PostsService(PostsRepository pr) {
+		super();
+		this.pr = pr;
+	}
+	//	create
 	public PostsDto createPosts(PostsDto pd) {
 //		convert to posts dto to jpa entity
 		Posts p = PostMapper.mapToPosts(pd);
