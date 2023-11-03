@@ -18,4 +18,6 @@ public class PostsDto {
 	String img;
 	String title;
 	String content;
+	int approved;
 }
+ 

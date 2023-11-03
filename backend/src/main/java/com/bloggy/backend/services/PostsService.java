@@ -3,6 +3,7 @@ package com.bloggy.backend.services;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -62,5 +63,12 @@ public PostsService(PostsRepository pr) {
 	 public PostsDto getpost(Long id) {
 		 Posts p = pr.findById(id).get();
 		 return PostMapper.mapToPostsDto(p);
+	 } 
+//	 get post by approval
+//	 @Query("select a from Posts where ")
+	 public List<PostsDto> getbyApproval(){
+		 List<Posts> users = pr.findByApproved(1);
+		 return users.stream().map(PostMapper::mapToPostsDto)
+	                .collect(Collectors.toList());
 	 }
 }

@@ -13,13 +13,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
-@NoArgsConstructor
+
 @Builder
 @Data
 @Entity
 @Table(name = "app_posts")
 public class Posts {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	long id;
@@ -34,6 +34,20 @@ public class Posts {
 	@Size(max=50)
 	String title;
 	@Column(name="content",nullable=false)
-	@Size(max=5000)
 	String content;
+	@Column(name="approved",nullable=false)
+	int approved;
+	public Posts(long id, long likes, String author, @Size(max = 10) String img, @Size(max = 50) String title,
+			String content, int approved) {
+		super();
+		this.id = id;
+		this.likes = likes;
+		this.author = author;
+		this.img = img;
+		this.title = title;
+		this.content = content;
+		this.approved = approved;
+	}
+	
+	public Posts() {}
 }

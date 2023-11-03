@@ -10,16 +10,19 @@ export const setAuthHeader = (token) => {
     window.localStorage.setItem('auth_token', token);
 };
 
+
+
 axios.defaults.baseURL = 'http://localhost:1593';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
-export const Request = (method, url, data,token) => {
+export const Request = (method, url, data) => {
     // const token = useSelector(state=>state.token);
     // console.log(token);
     let headers = {};
-    if (token!=null) {
-        headers = {'Authorization': `Bearer ${token}`};
+    if (getAuthToken() !== null && getAuthToken() !== "null") {
+        headers = {'Authorization': `Bearer ${getAuthToken()}`};
     }
+
     return axios({
         method: method,
         url: url,

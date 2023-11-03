@@ -3,9 +3,18 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser, setToken, logout } from '../features/authSlice';
-import { Request } from '../helper/axios_helper';
+import { Request, setAuthHeader } from '../helper/axios_helper';
 
 const Login = () => {
+    const [singUpData,setSignUpData] = useState({
+        firstName:'',
+        lastName:'',
+        login:'',
+        password:''
+    });
+    const handleChangeSignup = (e)=>{
+        setSignUpData({ ...singUpData, [e.target.name]: e.target.value });
+    }
     const [formData, setFormData] = useState({
         login: '',
         password: '',
@@ -23,19 +32,23 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         try {
             const response = await Request("POST", "/login", formData,tok);
             console.log(response);
             if (response.status === 200) {
                 const  token  = response.data.token;
                 console.log(token);
+                if(response.user ==="admin"){
+                    alert("welcome admin");
+                    window.localStorage.setItem("admin",true);
+                }
                 const user={
                   "username": response.data.login,
                   "firstName": response.data.firstName,
                   "lastName": response.data.lastName,
                   "id":response.data.id
                 }
+                setAuthHeader()
                 dispatch(setUser(user));
                 dispatch(setToken(token));
                 setFormData({ login: '', password: '' });
@@ -48,13 +61,12 @@ const Login = () => {
             console.error('Login error:', error);
         }
     };
-
     const handleLogout = () => {
+        window.localStorage.setItem("admin",false);
         dispatch(setUser(null));
         dispatch(setToken(null));
         dispatch(logout());
     };
-
     return (
         <div>
             {error && <div style={{ color: 'red' }}>{error}</div>}

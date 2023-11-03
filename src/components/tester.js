@@ -1,5 +1,5 @@
 import React from 'react'
-import { request,getAuthToken } from '../helper/axios_helper'
+import { request,getAuthToken,setAuthHeader } from '../helper/axios_helper'
 const Tester = () => {
   return (
     <div>
