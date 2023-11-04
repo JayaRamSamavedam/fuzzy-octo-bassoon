@@ -64,7 +64,26 @@ public class PostController {
 		else {
 			String act=token.substring(7);
 			if(userAuthenticationProvider.validateToken(act).isAuthenticated()) {
-				List<PostsDto> posts = ps.getAllUsers();
+				List<PostsDto> posts = ps.getblogs();
+				return new ResponseEntity<>(posts,HttpStatus.OK);
+			}
+			else {
+				response.setStatus(420);
+				return null;
+			}
+		}
+	}
+	
+	@GetMapping("/vlogs")
+	public ResponseEntity<List<PostsDto>> getVlogs(@RequestHeader("Authorization") String token,HttpServletResponse response){
+		if(token==null) {
+			response.setStatus(404);
+			return null;
+		}
+		else {
+			String act=token.substring(7);
+			if(userAuthenticationProvider.validateToken(act).isAuthenticated()) {
+				List<PostsDto> posts = ps.getvlogs();
 				return new ResponseEntity<>(posts,HttpStatus.OK);
 			}
 			else {

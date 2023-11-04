@@ -17,6 +17,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "app_posts")
 public class Posts {
 	
@@ -37,17 +39,19 @@ public class Posts {
 	String content;
 	@Column(name="approved",nullable=false)
 	int approved;
-	public Posts(long id, long likes, String author, @Size(max = 10) String img, @Size(max = 50) String title,
-			String content, int approved) {
-		super();
-		this.id = id;
-		this.likes = likes;
-		this.author = author;
-		this.img = img;
-		this.title = title;
-		this.content = content;
-		this.approved = approved;
-	}
-	
-	public Posts() {}
+	@Column(name="type",nullable=true)
+	String type;
+//	public Posts(long id, long likes, String author, @Size(max = 10) String img, @Size(max = 50) String title,
+//			String content, int approved) {
+//		super();
+//		this.id = id;
+//		this.likes = likes;
+//		this.author = author;
+//		this.img = img;
+//		this.title = title;
+//		this.content = content;
+//		this.approved = approved;
+//	}
+//	
+//	public Posts() {}
 }

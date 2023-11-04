@@ -9,4 +9,5 @@ import com.bloggy.backend.entites.Posts;
 
 public interface PostsRepository extends JpaRepository<Posts,Long>{
 	List<Posts> findByApproved(int approved);
+	List<Posts> findByType(String type);
 }

@@ -6,6 +6,7 @@ import { Request } from '../helper/axios_helper';
 import UpdatePost from './up';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { ListGroupItem } from 'reactstrap';
 
 const Pos = () => {
     const[update,setUpdate]=useState(null);
@@ -14,7 +15,7 @@ const Pos = () => {
     const location = useLocation();
     const postData = location.state;
     useEffect(() => {
-        axios.get(`http://localhost:1593/posts/${postData.id}`, {
+        axios.get(`http://localhost:8888/posts/${postData.id}`, {
             headers: {
                 Authorization: `Bearer ${window.localStorage.getItem('auth_token')}`,
                 'Content-Type': 'application/json',
@@ -40,7 +41,7 @@ const Pos = () => {
         if (storedUser.username === "admin" || storedUser.username === data.author) {
             const res = Request("DELETE", `/posts/delete/${postData.id}`, {});
             console.log(res);
-            navigate("/posts");
+            window.location.href = "/posts"
         }
         else{
             toast.error("you have no acess to do it");
@@ -80,31 +81,45 @@ const Pos = () => {
     }
     if(data.img!=null){
     return (
-        <div class="md:container md:mx-auto align-middle justify-center">
-            <p>Title: {data.title}</p>
-             {/* <ImageComponent imagename={data.img}/> */}
-            <p>Author: {data.author}</p>
-            <p>Likes: {data.likes}</p>
-            <div className="content-output">
+
+        <div class="container-xxl items-center justify-center h-screen ">
+
+            <div class="card mb-3 left-24 top-10" style={{"maxWidth": "1200px"}}>
+            <ListGroupItem className='justify-items-end'>
+<button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full' onClick={handleShare}>Share</button>
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={handleDelete}>Delete me</button>
+        <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full' onClick={handleUpdate}>Update</button>
+</ListGroupItem>
+            <div class="card-body dark:bg-black">
+            {/* <div className='card-Title'>Title: {data.title}</div> */}
+            <h1 class="card-title font-serif text-4xl text-center dark:text-white">{data.title}</h1>
+            <p class="card-text font-bold dark:text-white">Author: {data.author}</p>
+            <p class="card-text font-bold dark:text-white">Likes: {data.likes}</p>
+            <div className="content-output card  mb-3 dark:text-white ">
         <h2>Content Output</h2>
-        <div dangerouslySetInnerHTML={{ __html:data.content}}></div>
+        <div dangerouslySetInnerHTML={{ __html:data.content}}>
       </div>
-      <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full' onClick={handleShare}>Share</button>
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={handleDelete}>Delete me</button>
-      <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full' onClick={handleUpdate}>Update</button>
+      
       <ToastContainer />
         </div>
+        </div>
+
         
-    );}
+        </div>
+        </div>
+        
+    );
+}
     else{
         return(
-            <>
+            <div className="md:container md:mx-auto align-middle justify-center">
+
             <p>Author: {data.author}</p>
             <p>Title: {data.title}</p>
             <p>Content: {data.content}</p>
             <p>Likes: {data.likes}</p>
             <ToastContainer />
-            </>
+            </div>
         )
     }
 }

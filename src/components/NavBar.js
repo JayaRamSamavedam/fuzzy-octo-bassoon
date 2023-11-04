@@ -4,9 +4,10 @@ import img1 from "../Static/india-flag.svg"
 import { Link, Navigate } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 // import Login from './Login'
+
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Request, setAuthHeader } from '../helper/axios_helper';
 const Navbar = () => {
   const navigate = useNavigate("");
@@ -16,12 +17,20 @@ const Navbar = () => {
         password: '',
     });
     const [user,setUser]=useState(null);
+    useEffect(() => {
+      const userData = JSON.parse(window.localStorage.getItem('user'));
+  
+      if (userData) {
+        setUser(userData);
+      }
+    }, []);
     const u = window.localStorage.getItem("user");
     const [singUpData,setSignUpData] = useState({
       firstName:'',
       lastName:'',
       login:'',
-      password:''
+      password:'',
+      email:"",
   });
   const handleChangeSignup = (e)=>{
       setSignUpData({ ...singUpData, [e.target.name]: e.target.value });
@@ -81,7 +90,8 @@ const Navbar = () => {
                 "username": response.data.login,
                 "firstName": response.data.firstName,
                 "lastName": response.data.lastName,
-                "id":response.data.id
+                "id":response.data.id,
+                "email":response.data.email,
               }
               window.localStorage.setItem("user",user);
               toast.success(`welcome ${user.username}`)
@@ -115,13 +125,15 @@ const Navbar = () => {
                 "username": response.data.login,
                 "firstName": response.data.firstName,
                 "lastName": response.data.lastName,
-                "id": response.data.id
+                "id": response.data.id,
+                // "email":response.data.email,
             };
             
             // Store the user object as a JSON string in local storage
             window.localStorage.setItem("user", JSON.stringify(user));
             
             console.log(user);
+            console.log(user.username);
             window.localStorage.setItem("login", true);
             setUser(user);
             setFormData({ login: '', password: '' });
@@ -130,7 +142,10 @@ const Navbar = () => {
                 setError('Login failed. Please check your credentials.');
             }
         } catch (error) {
+              // toast.error(error.response.message)
+              // toast.error(response.data.message || 'Login failed. Please check your credentials.');
             setError('Login failed. Please check your credentials.');
+            toast.error('Login failed. Please check your credentials.');
             console.error('Login error:', error);
             window.localStorage.setItem("admin",false);
             window.localStorage.setItem("login",false);
@@ -156,7 +171,7 @@ const Navbar = () => {
   <div className="flex md:order-2">
   {user ?(
     <>
-    <div className='text-center font-sans font-bold'>{user.username}</div>
+    <div className='text-center font-sans font-bold dark:text-white'>{user.username}</div>
     <button type="button" className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800' onClick={handleLogout} >Logut</button>
     </>
 ):(<div>
@@ -184,21 +199,21 @@ Login
   </div>
 
 {user ?(  <div className="items-center justify-between hidden  content-center w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
-<ul className="flex flex-col p-1 md:p-0 mt-1 font-medium border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+<ul className="flex flex-col p-1 md:p-0 mt-1 font-medium border  rounded-lg  md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
   <li>
-    <a className="block  text-gray-900  hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700" aria-current="page"><Link to="/posts">Posts</Link></a>
+    <a className="block  text-gray-900  hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700" aria-current="page"><Link to="/posts">Blogs</Link></a>
   </li>
   {window.localStorage.getItem("admin")===true? (<li>
     <a  className="block  text-gray-900  hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"><Link to="/posts">Admin</Link></a>
   </li>):(
     <li>
-    <a  className="block  text-gray-900  hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"><Link to="/posts">Topics</Link></a>
+    <a  className="block  text-gray-900  hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"><Link to="/vlogs">Vlogs</Link></a>
   </li>
   )}
   
-  <li>
-    <a  className="block  text-gray-900  hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"><Link to="/blog">blogs</Link></a>
-  </li>
+   {/* <li>
+     <a  className="block  text-gray-900  hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"><Link to="/blog">blogs</Link></a>
+  </li> */}
   <li>
     <a  className="block  text-gray-900  hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"><Link to="/create">CreateNew</Link></a>
   </li>
@@ -214,7 +229,7 @@ Login
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="staticBackdropLabel">Signup</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close bg-black" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form onSubmit={handleSignupSubmit}>
       <div class="modal-body">
@@ -249,6 +264,14 @@ UserName: <input
                         onChange={handleChangeSignup}
                     />
                     <br/>
+                    email:<input
+                        type="email"
+                        name="email"
+                        placeholder="email"
+                        value={singUpData.email}
+                        onChange={handleChangeSignup}
+                    />
+                    <br/>
                     PassWord:<input
                         type="password"
                         name="password"
@@ -275,7 +298,7 @@ UserName: <input
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="staticBackdropLabel">Login</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close bg-black" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form onSubmit={handleSubmit}>
       <div class="modal-body">
@@ -302,6 +325,7 @@ UserName: <input
                         value={formData.password}
                         onChange={handleChange}
                     />
+
                     {/* <button type="submit">Login</button> */}
                 
             {/* )} */}

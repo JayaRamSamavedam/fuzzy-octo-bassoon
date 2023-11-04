@@ -40,6 +40,18 @@ public PostsService(PostsRepository pr) {
 	        return users.stream().map(PostMapper::mapToPostsDto)
 	                .collect(Collectors.toList());
 	    }
+	 
+	 public List<PostsDto> getblogs(){
+		 List<Posts> users = pr.findByType("blog");
+	        return users.stream().map(PostMapper::mapToPostsDto)
+	                .collect(Collectors.toList());
+	 }
+	 public List<PostsDto> getvlogs() {
+	        List<Posts> users = pr.findByType("vlog");
+	        return users.stream().map(PostMapper::mapToPostsDto)
+	                .collect(Collectors.toList());
+	    }
+	 
 //	update
 	 public PostsDto updatePost(PostsDto post) {
 		 Posts existingpost = pr.findById(post.getId()).get();
@@ -64,6 +76,7 @@ public PostsService(PostsRepository pr) {
 		 Posts p = pr.findById(id).get();
 		 return PostMapper.mapToPostsDto(p);
 	 } 
+	 
 //	 get post by approval
 //	 @Query("select a from Posts where ")
 	 public List<PostsDto> getbyApproval(){
@@ -71,4 +84,6 @@ public PostsService(PostsRepository pr) {
 		 return users.stream().map(PostMapper::mapToPostsDto)
 	                .collect(Collectors.toList());
 	 }
+	 
+	 
 }

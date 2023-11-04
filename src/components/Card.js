@@ -1,6 +1,10 @@
 import React from 'react'
 import Img from "./imgsuper.jpeg"
+import { useNavigate } from 'react-router-dom'
 const Card = () => {
+
+    const navigate=useNavigate("");
+    
   return (
     <div><div class="max-w-sm rounded overflow-hidden shadow-lg">
     <img class="w-full" src={Img} alt="Sunset in the mountains"/>

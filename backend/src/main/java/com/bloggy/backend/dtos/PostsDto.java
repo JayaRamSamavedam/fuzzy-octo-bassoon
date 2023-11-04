@@ -19,5 +19,6 @@ public class PostsDto {
 	String title;
 	String content;
 	int approved;
+	String type;
 }
  

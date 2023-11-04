@@ -38,10 +38,7 @@ const Login = () => {
             if (response.status === 200) {
                 const  token  = response.data.token;
                 console.log(token);
-                if(response.user ==="admin"){
-                    alert("welcome admin");
-                    window.localStorage.setItem("admin",true);
-                }
+                
                 const user={
                   "username": response.data.login,
                   "firstName": response.data.firstName,

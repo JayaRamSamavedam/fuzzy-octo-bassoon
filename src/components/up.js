@@ -30,7 +30,7 @@ const Up = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const response = await axios.put(`http://localhost:1593/posts/update`, post.data, {
+        const response = await axios.put(`http://localhost:8888/posts/update`, post.data, {
           headers: {
             Authorization: `Bearer ${window.localStorage.getItem('auth_token')}`,
           },
@@ -45,7 +45,7 @@ const Up = () => {
         const imageFormData = new FormData();
         imageFormData.append('image', post.image);
 
-        const imageResponse = await axios.post(`http://localhost:1593/post/image/upload/${response.data.id}`, imageFormData, {
+        const imageResponse = await axios.post(`http://localhost:8888/post/image/upload/${response.data.id}`, imageFormData, {
           headers: {
             Authorization: `Bearer ${window.localStorage.getItem('auth_token')}`,
             'Content-Type': 'multipart/form-data', // Required for file upload

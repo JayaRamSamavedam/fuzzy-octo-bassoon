@@ -17,5 +17,6 @@ public class UserDto {
     private String lastName;
     private String login;
     private String token;
+    private String email;
     
 }

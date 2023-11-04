@@ -3,13 +3,14 @@ import axios from 'axios';
 import ImageComponent from './DisplayImage';
 import { useNavigate } from 'react-router-dom'
 export const AllPOsts = () => {
+  
   const [data, setData] = useState([]);
   const navigate=useNavigate("");
   const handleClick = (id) => {
     navigate('/pos', { state: { id: id } });
   }
   useEffect(() => {
-    axios.get('http://localhost:1593/posts', {
+    axios.get('http://localhost:8888/posts', {
       headers: {
         Authorization: `Bearer ${window.localStorage.getItem('auth_token')}`,
         'Content-Type': 'application/json',

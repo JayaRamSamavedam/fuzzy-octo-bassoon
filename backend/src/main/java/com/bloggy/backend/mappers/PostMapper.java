@@ -16,7 +16,8 @@ public class PostMapper {
                 Posts.getImg(),
                 Posts.getTitle(),
                 Posts.getContent(),
-                Posts.getApproved()
+                Posts.getApproved(),
+                Posts.getType()
         );
         return PostsDto;
     }
@@ -30,7 +31,8 @@ public class PostMapper {
                 Posts.getImg(),
                 Posts.getTitle(),
                 Posts.getContent(),
-                Posts.getApproved()
+                Posts.getApproved(),
+                Posts.getType()
         );
         return p;
     }

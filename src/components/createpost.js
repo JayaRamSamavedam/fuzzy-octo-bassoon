@@ -1,23 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Appbar from "./NavBar";
-// import React, { useState } from 'react';
+import { ToastContainer, toast } from "react-toastify";
 import JoditEditor from 'jodit-react';
 import { useNavigate } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
 
 const CreatePost = () => {
-  const user =window.localStorage.getItem("user");
-  console.log(user);
-  const navigate=useNavigate("");
-  const [editorContent, setEditorContent] = useState('');
+  const [user, setUser] = useState(null);
+  const options = ["blog", "vlog"];
+  const [selectedOption, setSelectedOption] = useState("");
+
+  const handleOptionChange = (option) => {
+    setSelectedOption(option);
+  };
+
+  const getUserFromLocalStorage = () => {
+    const userString = window.localStorage.getItem("user");
+    if (userString) {
+      const userObject = JSON.parse(userString);
+      setUser(userObject);
+      console.log(userObject);
+    }
+  };
+
+  useEffect(() => {
+    getUserFromLocalStorage();
+  }, []);
+
+  const navigate = useNavigate();
+  const [editorContent, setEditorContent] = useState("");
   const contentFieldChanged = (data) => {
     setEditorContent(data);
   };
+
   const [post, setPost] = useState({
     title: "",
     content: "",
     author: "",
     image: null,
+    type: "",
   });
 
   const handleInputChange = (e) => {
@@ -30,91 +51,102 @@ const CreatePost = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
 
-    // Step 1: Upload the image
     const imageFormData = new FormData();
     imageFormData.append("image", post.image);
 
-    // const imageFileName = imageResponse.data;
-      
-    // Step 2: Create the post with the image file name
     const postFormData = new FormData();
     postFormData.append("title", post.title);
     postFormData.append("content", editorContent);
-    postFormData.append("author", post.author);
-    postFormData.append("img", "image"); // Reference to the uploaded image
-      
-    const postResponse = await axios.post("http://localhost:1593/posts/add", postFormData, {
-      headers: {
-        "Authorization":`Bearer ${window.localStorage.getItem("auth_token")}`,
-        // "Content-Type": "multipart/form-data", // Required for file upload
-      },
-    });
-    console.log("Post created:", postResponse.data);
+    postFormData.append("author", user.username);
+    postFormData.append("img", "image");
+    postFormData.append("type", selectedOption);
+
     try {
-      const imageResponse = await axios.post(`http://localhost:1593/post/image/upload/${postResponse.data.id}`, imageFormData, {
+      const postResponse = await axios.post("http://localhost:8888/posts/add", postFormData, {
         headers: {
-          "Authorization":`Bearer ${window.localStorage.getItem("auth_token")}`,
-          "Content-Type": "multipart/form-data", // Required for file upload
+          "Authorization": `Bearer ${window.localStorage.getItem("auth_token")}`,
         },
       });
-      console.log(imageResponse);
-      // Get the uploaded image file name from the response
-     
-  
-      // Check the response or perform any other action after creating the post.
-      
-  
-      // Optionally, you can clear the form fields
-      setPost({
-        title: "",
-        content: "",
-        author: "",
-        image: null,
+
+      console.log("Post created:", postResponse.data);
+
+      try {
+        const imageResponse = await axios.post(`http://localhost:1593/post/image/upload/${postResponse.data.id}`, imageFormData, {
+          headers: {
+            "Authorization": `Bearer ${window.localStorage.getItem("auth_token")}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        console.log(imageResponse);
+
+        setPost({
+          title: "",
+          content: "",
+          author: "",
+          image: null,
+        });
+
+        navigate("/posts");
+      } catch (imageError) {
+        console.error("Error uploading image:", imageError);
+        toast.error("Image upload failed. Please try again.");
       }
-      
-      ); 
-      navigate("/posts");
-    } catch (error) {
-      // Handle errors
-      console.error("Error creating post:", error);
+    } catch (postError) {
+      console.error("Error creating post:", postError);
+      toast.error("Failed to create the post. Server is not working.");
     }
   };
-  
 
   return (
-    <div>
-    {/* <Appbar/> */}
+    <>
       <div className="text-4xl font-serif font-bold">Create a New Post</div>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="title"
-          placeholder="Title"
-          value={post.title}
-          onChange={handleInputChange}
-        />
-        <JoditEditor
-        value={editorContent}
-        onChange={(newContent) => contentFieldChanged(newContent)}
-      />
-        <input
-          type="text"
-          name="author"
-          placeholder="Author"
-          value={post.author}
-          onChange={handleInputChange}
-        />
-        <input
-          type="file"
-          name="image"
-          accept="image/*"
-          onChange={handleInputChange}
-        />
-        <button type="submit">Create Post</button>
-      </form>
-    </div>
+      <div className="card mb-3 left-24 top-10" style={{ "maxWidth": "1200px" }}>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="title"
+            placeholder="Title"
+            value={post.title}
+            onChange={handleInputChange}
+          />
+          <JoditEditor
+            value={editorContent}
+            onChange={(newContent) => contentFieldChanged(newContent)}
+          />
+          <div>
+            <h2>Select Your Option</h2>
+            <ul>
+              {options.map((option) => (
+                <li key={option}>
+                  <label>
+                    <input
+                      type="radio"
+                      name="options"
+                      value={option}
+                      checked={selectedOption === option}
+                      onChange={() => handleOptionChange(option)}
+                    />
+                    {option}
+                  </label>
+                </li>
+              ))}
+            </ul>
+            <h3>Selected Option:</h3>
+            <p>{selectedOption}</p>
+          </div>
+          <input
+            type="file"
+            name="image"
+            accept="image/*"
+            onChange={handleInputChange}
+          />
+          <button type="submit">Create Post</button>
+        </form>
+      </div>
+      <ToastContainer />
+    </>
   );
 };
 

@@ -13,9 +13,11 @@ import CreatePost from "./components/createpost";
 import ImageComponent from "./components/DisplayImage";
 import MyJoditEditor from "./components/Joditedit";
 import { AllPOsts } from "./components/AllPOsts";
+import { Vlogs } from "./components/Vlogs";
 import Cards from "./components/Card";
 import Pos from "./components/Pos";
 import UpdatePost from "./components/up";
+
 export default function App() {
   
   return (
@@ -40,6 +42,7 @@ export default function App() {
        <Route path="/pos" element={<Pos/>}/>
        <Route path="/update" element={<UpdatePost/>}/>
        <Route path="/" element={<Home/>}/>
+       <Route path="/vlogs" element={<Vlogs/>}/>
        </Routes>
     </div>
   )
