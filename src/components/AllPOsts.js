@@ -10,7 +10,7 @@ export const AllPOsts = () => {
     navigate('/pos', { state: { id: id } });
   }
   useEffect(() => {
-    axios.get('http://localhost:8888/posts', {
+    axios.get('http://54.157.30.162:1593/posts', {
       headers: {
         Authorization: `Bearer ${window.localStorage.getItem('auth_token')}`,
         'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ export const AllPOsts = () => {
   console.log(data);
   const getImage = async (imageName) => {
     try {
-      const response = await axios.get(`http://localhost:1593/post/image/${imageName}`, {
+      const response = await axios.get(`http://54.157.30.162:1593/post/image/${imageName}`, {
         headers: {
           Authorization: `Bearer ${window.localStorage.getItem('auth_token')}`,
         },
