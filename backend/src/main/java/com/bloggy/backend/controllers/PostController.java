@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StreamUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,6 +43,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin(origins = "https://eloquent-mandazi-737417.netlify.app")
 public class PostController {
 //	 	@Value("${upload-dir}") // Define the upload directory in your application.properties or application.yml
 //	    private String uploadDir;
